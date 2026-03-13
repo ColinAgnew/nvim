@@ -5,6 +5,16 @@ return {
         opts = {},
     },
 { 'echasnovski/mini.icons', version = false },
+{
+   "amitds1997/remote-nvim.nvim",
+   version = "*", -- Pin to GitHub releases
+   dependencies = {
+       "nvim-lua/plenary.nvim", -- For standard functions
+       "MunifTanjim/nui.nvim", -- To build the plugin UI
+       "nvim-telescope/telescope.nvim", -- For picking b/w different remote methods
+   },
+   config = true,
+},
     {
         "vhyrro/luarocks.nvim",
         priority = 1000, -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
@@ -13,6 +23,8 @@ return {
     {
         "nvim-neorg/neorg",
         dependencies = { "luarocks.nvim" },
+        lazy = false,
+        version = "*", -- Use the latest stable release
         -- put any other flags you wanted to pass to lazy here!
         config = function()
             require("neorg").setup({
@@ -29,6 +41,8 @@ return {
                     },
                 },
             })
+            vim.wo.foldlevel = 99
+            vim.wo.conceallevel = 2
         end,
     },
     -- delete buffer

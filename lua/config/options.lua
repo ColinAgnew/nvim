@@ -1,5 +1,7 @@
 vim.g.mapleader = " "                           -- change leader to a space
 vim.g.maplocalleader = ","                      -- change localleader to a comma
+vim.g.neovide_cursor_animation_length = 0
+vim.g.neovide_scroll_animation_length = 0
 
 vim.g.loaded_netrw = 1                          -- disable netrw
 vim.g.loaded_netrwPlugin = 1                    --  disable netrw
@@ -39,7 +41,7 @@ vim.opt.scrolloff = 8                           -- Makes sure there are always e
 vim.opt.sidescrolloff = 8                       -- Makes sure there are always eight lines of context
 vim.opt.showcmd = false                         -- Don't show the command in the last line
 vim.opt.ruler = false                           -- Don't show the ruler
--- vim.opt.guifont = "monospace:h17"               -- the font used in graphical neovim applications
+--vim.opt.guifont = {"Hack Nerd Font Mono", "h12"}-- the font used in graphical neovim applications
 vim.opt.title = true                            -- set the title of window to the value of the titlestring
 vim.opt.confirm = true                          -- confirm to save changes before exiting modified buffer
 vim.opt.fillchars = { eob = " " }               -- change the character at the end of buffer

@@ -19,7 +19,7 @@ api.nvim_create_autocmd("Filetype", {
 -- Highlight on yank
 api.nvim_create_autocmd("TextYankPost", {
   callback = function()
-    vim.highlight.on_yank()
+    vim.hl.on_yank()
   end,
 })
 
@@ -59,7 +59,7 @@ api.nvim_create_autocmd(
     pattern = { "*.txt", "*.md", "*.tex" },
     callback = function()
       vim.opt.spell = true
-      vim.opt.spelllang = "en,de"
+      vim.opt.spelllang = "en"
     end,
   }
 )
@@ -156,4 +156,16 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     require("go.format").goimport()
   end,
   group = goimport_sync_grp,
+})
+
+
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  callback = function()
+    if require("nvim-treesitter.parsers").has_parser() then
+      vim.opt.foldmethod = "expr"
+      vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+    else
+      vim.opt.foldmethod = "syntax"
+    end
+  end,
 })

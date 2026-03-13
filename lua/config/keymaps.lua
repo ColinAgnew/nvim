@@ -59,6 +59,10 @@ map("v", "K", ":m '<-2<CR>gv=gv", opts)
 map("n", "<Leader>w", ":write!<CR>", opts)
 map("n", "<Leader>q", ":q!<CR>", opts)
 
+-- Window Sizing
+map("n", "<Leader>z", "<C-w>_<C-w>|", opts, { desc = "Full si[z]e" })
+map("n", "<Leader>Z", "<C-w>=", opts, { desc = "Even si[Z]e" })
+
 -- Remap for dealing with visual line wraps
 map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true })
 map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true })
@@ -95,11 +99,11 @@ map("n", "<C-[>", ":bprevious<CR>", opts)
 -- Panes resizing:b
 map("n", "+", ":vertical resize +5<CR>")
 map("n", "_", ":vertical resize -5<CR>")
--- map("n", "=", ":resize +5<CR>")
--- map("n", "-", ":resize -5<CR>")
+map("n", "=", ":resize +5<CR>")
+map("n", "-", ":resize -5<CR>")
 
 -- Map enter to ciw in normal mode
-map("n", "<CR>", "ciw", opts)
+-- map("n", "<CR>", "ciw", opts)
 map("n", "<BS>", "ci", opts)
 
 -- map("n", "n", "nzzv", opts)
@@ -122,7 +126,7 @@ map("n", "<Leader>m", ":Telescope git_status<CR>")
 map("n", "X", ":keeppatterns substitute/\\s*\\%#\\s*/\\r/e <bar> normal! ==^<cr>", { silent = true })
 
 -- Select all
-map("n", "<C-S-a>", "ggVG")
+map("n", "<C-A-a>", "ggVG")
 
 -- write file in current directory
 -- :w %:h/<new-file-name>
@@ -147,6 +151,8 @@ map("n", "dd", '"_dd')
 map("n", "o", 'o<Esc>')
 map("n", "O", 'O<Esc>')
 
+
+
 -- Allow clipboard copy paste in neovim
 vim.g.neovide_input_use_logo = 1
 vim.api.nvim_set_keymap('', '<D-v>', '+p<CR>', { noremap = true, silent = true})
@@ -162,3 +168,13 @@ end, { desc = "Compare 2 files" })
 vim.keymap.set("n", "<leader>sc", function()
   require("telescope").extensions.diff.diff_current({ hidden = true })
 end, { desc = "Compare file with current" })
+
+vim.keymap.set('n', 'zK', function()
+    local winid = require('ufo').peekFoldedLinesUnderCursor()
+    if not winid then
+        -- choose one of coc.nvim and nvim lsp
+        vim.fn.CocActionAsync('definitionHover') -- coc.nvim
+        vim.lsp.buf.hover()
+    end
+end)
+

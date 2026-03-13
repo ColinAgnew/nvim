@@ -5,10 +5,13 @@ M.on_attach = function(_, bufnr)
     if desc then
       desc = "LSP: " .. desc
     end
-
     vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
   end
-
+-- Setup required for ufo
+capabilities.textDocument.foldingRange = {
+  dynamicRegistration = false,
+  lineFoldingOnly = true,
+}
   nmap("gd", require("telescope.builtin").lsp_definitions, "Goto Definition")
   nmap("gr", require("telescope.builtin").lsp_references, "Goto References")
   nmap("gi", require("telescope.builtin").lsp_implementations, "Goto Implementation")

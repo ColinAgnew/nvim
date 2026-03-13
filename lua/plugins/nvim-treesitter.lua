@@ -22,6 +22,7 @@ return {
         ensure_installed = {
           -- "bash",
           "c",
+          "devicetree",
           "html",
           "javascript",
           "json",
