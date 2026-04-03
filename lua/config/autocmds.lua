@@ -149,23 +149,27 @@ vim.api.nvim_create_autocmd("FileType", {
 -- })
 --
 -- Run gofmt + goimport on save
-local goimport_sync_grp = vim.api.nvim_create_augroup("GoImport", {})
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = "*.go",
-  callback = function()
-    require("go.format").goimport()
-  end,
-  group = goimport_sync_grp,
-})
+if not vim.g.vscode then
+  local goimport_sync_grp = vim.api.nvim_create_augroup("GoImport", {})
+  vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*.go",
+    callback = function()
+      require("go.format").goimport()
+    end,
+    group = goimport_sync_grp,
+  })
+end
 
 
-vim.api.nvim_create_autocmd({ "FileType" }, {
-  callback = function()
-    if require("nvim-treesitter.parsers").has_parser() then
-      vim.opt.foldmethod = "expr"
-      vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-    else
-      vim.opt.foldmethod = "syntax"
-    end
-  end,
-})
+if not vim.g.vscode then
+  vim.api.nvim_create_autocmd({ "FileType" }, {
+    callback = function()
+      if require("nvim-treesitter.parsers").has_parser() then
+        vim.opt.foldmethod = "expr"
+        vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+      else
+        vim.opt.foldmethod = "syntax"
+      end
+    end,
+  })
+end

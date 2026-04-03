@@ -1,5 +1,6 @@
 return {
   "nvim-lualine/lualine.nvim",
+  cond = not vim.g.vscode,
   dependencies = {
     "meuter/lualine-so-fancy.nvim",
   },

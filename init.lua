@@ -10,3 +10,8 @@ if vim.g.neovide then  -- only in a Neovide session
   autocmd VimEnter * if match(getcwd(), '^' . expand('~')) == -1 | cd ~ | endif
   ]]
 end
+local orig = vim.notify
+vim.notify = function(...)
+  vim.notify = orig  -- restore immediately
+  error(debug.traceback("vim.notify overwritten here", 2))
+end

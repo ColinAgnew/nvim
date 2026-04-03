@@ -1,6 +1,7 @@
 return {
   {
     "ray-x/go.nvim",
+    cond = not vim.g.vscode,
     dependencies = { -- optional packages
       "ray-x/guihua.lua",
       "neovim/nvim-lspconfig",

@@ -1,6 +1,7 @@
 return {
   {
     'mrcjkb/rustaceanvim',
+    cond = not vim.g.vscode,
     version = '^3', -- Recommended
     ft = { 'rust' },
     -- dependencies = {

@@ -41,7 +41,7 @@ return {
   vimls = {
     filetypes = { "vim" },
   },
-  ts_ls = {},
+  -- ts_ls = {},
   gopls = {},
   pyright = {},
   -- golangci_lint_ls = {},

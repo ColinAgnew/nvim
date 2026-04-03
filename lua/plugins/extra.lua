@@ -7,6 +7,7 @@ return {
 { 'echasnovski/mini.icons', version = false },
 {
    "amitds1997/remote-nvim.nvim",
+   cond = not vim.g.vscode,
    version = "*", -- Pin to GitHub releases
    dependencies = {
        "nvim-lua/plenary.nvim", -- For standard functions
@@ -15,37 +16,7 @@ return {
    },
    config = true,
 },
-    {
-        "vhyrro/luarocks.nvim",
-        priority = 1000, -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
-        config = true,
-    },
-    {
-        "nvim-neorg/neorg",
-        dependencies = { "luarocks.nvim" },
-        lazy = false,
-        version = "*", -- Use the latest stable release
-        -- put any other flags you wanted to pass to lazy here!
-        config = function()
-            require("neorg").setup({
-                load = {
-                    ["core.defaults"] = {},
-                    ["core.concealer"] = {},
-                    ["core.dirman"] = {
-                        config = {
-                            workspaces = {
-                                notes = "~/notes",
-                            },
-                            default_workspace = "notes",
-                        },
-                    },
-                },
-            })
-            vim.wo.foldlevel = 99
-            vim.wo.conceallevel = 2
-        end,
-    },
-    -- delete buffer
+     -- delete buffer
     {
         "famiu/bufdelete.nvim",
         event = "VeryLazy",
@@ -71,6 +42,7 @@ return {
     -- Neovim plugin to improve the default vim.ui interfaces
     {
         "stevearc/dressing.nvim",
+        cond = not vim.g.vscode,
         dependencies = { "MunifTanjim/nui.nvim" },
         opts = {},
         config = function()
@@ -93,6 +65,7 @@ return {
     -- Smooth scrolling neovim plugin written in lua
     {
         "karb94/neoscroll.nvim",
+        cond = not vim.g.vscode,
         config = function()
             require("neoscroll").setup({
                 stop_eof = true,
@@ -127,6 +100,7 @@ return {
     -- Neovim setup for init.lua and plugin development with full signature help, docs and completion for the nvim lua API
     {
         "folke/neodev.nvim",
+        cond = not vim.g.vscode,
         config = function()
             require("neodev").setup({
                 library = { plugins = { "neotest" }, types = true },
@@ -264,6 +238,7 @@ return {
 
     {
         "utilyre/barbecue.nvim",
+        cond = not vim.g.vscode,
         name = "barbecue",
         version = "*",
         dependencies = {

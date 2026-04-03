@@ -16,9 +16,18 @@ return {
 
     { "<leader>v", desc = "Go to definition in a split" },
 
-    { "<leader>a", desc = "Swap next param" },
-
-    { "<leader>A", desc = "Swap previous param" },
+    { "<leader>a",  desc = "AI/Claude Code" },
+    { "<leader>ac",  desc = "Toggle Claude" },
+    { "<leader>af",  desc = "Focus Claude" },
+    { "<leader>ar",  desc = "Resume Claude" },
+    { "<leader>aC",  desc = "Continue Claude" },
+    { "<leader>am",  desc = "Select Claude model" },
+    { "<leader>ab",  desc = "Add current buffer" },
+    { "<leader>as",  desc = "Send to Claude" },
+    { "<leader>as", desc = "Add file" },
+    -- Diff management
+    { "<leader>aa",  desc = "Accept diff" },
+    { "<leader>ad",  desc = "Deny diff" },
 
     { "<leader>o",
       function ()
@@ -75,7 +84,10 @@ return {
     { "<leader>ls", vim.lsp.buf.signature_help, desc = "Display Signature Information" },
     { "<leader>lw", require("telescope.builtin").diagnostics, desc = "Diagnostics" },
 
+    { "<leader>m", desc = "+Markview" },
+    { "<leader>ms", "<cmd>Markview splitToggle<cr>", desc = "Toggle split-view preview"},
 
+    { "<leader>M", "<cmd>Markview Toggle<cr>", desc = "Toggle preview for the current buffer"},
 { "<leader>s", desc = "+Search" },
     { "<leader>sB", "<cmd>Telescope git_branches<cr>", desc = "Git branches" },
     { "<leader>sC", "<cmd>Telescope commands<cr>", desc = "Commands" },

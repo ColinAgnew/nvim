@@ -1,5 +1,6 @@
 return {
   "neovim/nvim-lspconfig",
+  cond = not vim.g.vscode,
   event = { "BufReadPre", "BufNewFile" },
   dependencies = {
     { "williamboman/mason.nvim", config = true },
@@ -23,7 +24,6 @@ return {
     require("mason-lspconfig").setup({
       ensure_installed = vim.tbl_keys(require("plugins.lsp.servers")),
     })
-    require("lspconfig.ui.windows").default_options.border = "single"
 
     require("neodev").setup()
 
@@ -43,21 +43,17 @@ return {
         map("<leader>Ps", require("telescope.builtin").lsp_dynamic_workspace_symbols, "Workspace Symbols")
 
         map("gl", vim.diagnostic.open_float, "Open Diagnostic Float")
-        -- map("K", vim.lsp.buf.hover, "Hover Documentation")
         map("gs", vim.lsp.buf.signature_help, "Signature Documentation")
         map("gD", vim.lsp.buf.declaration, "Goto Declaration")
 
         map("<leader>v", "<cmd>vsplit | lua vim.lsp.buf.definition()<cr>", "Goto Definition in Vertical Split")
 
-        -- Thank you teej
-        -- https://github.com/nvim-lua/kickstart.nvim/blob/master/init.lua#L502
         local client = vim.lsp.get_client_by_id(event.data.client_id)
         if client and client.server_capabilities.documentHighlightProvider then
           vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
             buffer = event.buf,
             callback = vim.lsp.buf.document_highlight,
           })
-
           vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
             buffer = event.buf,
             callback = vim.lsp.buf.clear_references,
@@ -66,34 +62,32 @@ return {
       end,
     })
 
-    -- local capabilities = vim.lsp.protocol.make_client_capabilities()
-    -- capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
-    local mason_lspconfig = require("mason-lspconfig")
-
-    mason_lspconfig.setup({
+    -- Register each mason-managed server with vim.lsp.config
+    require("mason-lspconfig").setup({
       handlers = {
         function(server_name)
-          require("lspconfig")[server_name].setup({
+          local server_settings = require("plugins.lsp.servers")[server_name] or {}
+          vim.lsp.config(server_name, {
             capabilities = capabilities,
-            -- on_attach = require("plugins.lsp.on_attach").on_attach,
-            settings = require("plugins.lsp.servers")[server_name],
-            filetypes = (require("plugins.lsp.servers")[server_name] or {}).filetypes,
-        })
-      end,
-      }
+            settings = server_settings,
+            filetypes = server_settings.filetypes,
+          })
+          vim.lsp.enable(server_name)
+        end,
+      },
     })
 
-    -- Gleam LSP 
-    -- For some reason mason doesn't work with gleam lsp
-    require("lspconfig").gleam.setup({
+    -- Gleam LSP (not managed by mason)
+    vim.lsp.config("gleam", {
       cmd = { "gleam", "lsp" },
       filetypes = { "gleam" },
-      root_dir = require("lspconfig").util.root_pattern("gleam.toml", ".git"),
-      capabilities =  capabilities,
+      root_markers = { "gleam.toml", ".git" },
+      capabilities = capabilities,
     })
+    vim.lsp.enable("gleam")
 
     vim.diagnostic.config({
       title = false,
@@ -111,7 +105,7 @@ return {
       },
     })
 
-    local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+    local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
     for type, icon in pairs(signs) do
       local hl = "DiagnosticSign" .. type
       vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })

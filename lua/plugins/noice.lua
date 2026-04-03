@@ -1,5 +1,6 @@
 return {
     "folke/noice.nvim",
+    cond = not vim.g.vscode,
     event = "VeryLazy",
     opts = {
         -- add any options here
@@ -14,6 +15,9 @@ return {
     },
     config = function()
  require("noice").setup({
+  notify = {
+                enabled = false,
+            },
   lsp = {
     -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
     override = {

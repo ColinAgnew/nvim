@@ -1,6 +1,8 @@
 return {
-  {
+  --[[
+{
     "pmizio/typescript-tools.nvim",
+    cond = not vim.g.vscode,
     event = "BufReadPre",
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
     opts = {},
@@ -30,6 +32,8 @@ return {
       })
     end,
   },
+  --]]
+
   {
     "vuki656/package-info.nvim",
     event = "BufReadPre",

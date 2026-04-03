@@ -8,6 +8,33 @@ return {
       "nvim-treesitter/nvim-treesitter-textobjects",
     },
     config = function()
+      local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+      parser_config.asciidoc_inline = {
+        install_info = {
+          url = "https://github.com/cathaysia/tree-sitter-asciidoc",
+          branch = "master",
+          location = "tree-sitter-asciidoc_inline",
+          files = { "src/parser.c", "src/scanner.c" },
+        },
+      }
+      parser_config.asciidoc = {
+        install_info = {
+          url = "https://github.com/cathaysia/tree-sitter-asciidoc",
+          branch = "master",
+          location = "tree-sitter-asciidoc",
+          files = { "src/parser.c", "src/scanner.c" },
+          requires = { "asciidoc_inline" },
+        },
+      }
+        require("nvim-treesitter.parsers").comment = {
+            install_info = {
+                url = "https://github.com/OXY2DEV/tree-sitter-comment",
+
+                branch = "main", -- only needed if different from default branch
+                queries = "queries/",
+            },
+        }
+
       require("nvim-treesitter.configs").setup({
         sync_install = false,
         ignore_install = { "javascript" },
@@ -100,12 +127,14 @@ return {
           },
           swap = {
             enable = true,
-            swap_next = {
+            --[[
+ swap_next = {
               ["<leader>a"] = "@parameter.inner",
             },
             swap_previous = {
               ["<leader>A"] = "@parameter.inner",
-            },
+            },--]]
+
           },
         },
       })

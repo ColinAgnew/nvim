@@ -151,6 +151,17 @@ map("n", "dd", '"_dd')
 map("n", "o", 'o<Esc>')
 map("n", "O", 'O<Esc>')
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "norg",
+  callback = function()
+    local bopts = { noremap = true, silent = true, buffer = true }
+    vim.keymap.set("n", "d", "d", bopts)
+    vim.keymap.set("v", "d", "d", bopts)
+    vim.keymap.set("n", "dd", "dd", bopts)
+    vim.keymap.set("n", "<BS>", "<BS>", bopts)
+  end,
+})
+
 
 
 -- Allow clipboard copy paste in neovim
@@ -169,12 +180,117 @@ vim.keymap.set("n", "<leader>sc", function()
   require("telescope").extensions.diff.diff_current({ hidden = true })
 end, { desc = "Compare file with current" })
 
-vim.keymap.set('n', 'zK', function()
-    local winid = require('ufo').peekFoldedLinesUnderCursor()
-    if not winid then
-        -- choose one of coc.nvim and nvim lsp
-        vim.fn.CocActionAsync('definitionHover') -- coc.nvim
-        vim.lsp.buf.hover()
-    end
-end)
+if not vim.g.vscode then
+  vim.keymap.set('n', 'zK', function()
+      local winid = require('ufo').peekFoldedLinesUnderCursor()
+      if not winid then
+          vim.fn.CocActionAsync('definitionHover') -- coc.nvim
+          vim.lsp.buf.hover()
+      end
+  end)
+end
 
+-- VS Code specific keymaps (replaces Telescope/Neo-tree/etc.)
+if vim.g.vscode then
+  local vsc = require('vscode')
+
+  -- File finding (replaces Telescope)
+  map("n", "<leader>f", function() vsc.action("workbench.action.quickOpen") end)
+  map("n", "<leader>sf", function() vsc.action("workbench.action.quickOpen") end)
+  map("n", "<leader>st", function() vsc.action("workbench.action.findInFiles") end)
+  map("n", "<leader>sT", function() vsc.action("workbench.action.findInFiles") end)
+  map("n", "<leader>sl", function() vsc.action("workbench.action.quickOpen") end)
+  map("n", "<leader>so", function() vsc.action("workbench.action.openRecent") end)
+  map("n", "<leader>o", function() vsc.action("workbench.action.showAllEditors") end)
+
+  -- File explorer (replaces Neo-tree)
+  map("n", "<leader>e", function() vsc.action("workbench.action.toggleSidebarVisibility") end)
+  map("n", "<leader><tab>", function() vsc.action("workbench.view.explorer") end)
+
+  -- Buffer/editor navigation
+  map("n", "<A-l>", function() vsc.action("workbench.action.nextEditor") end)
+  map("n", "<C-[>", function() vsc.action("workbench.action.previousEditor") end)
+  map("n", "Q", function() vsc.action("workbench.action.closeActiveEditor") end)
+
+  -- Save/quit
+  map("n", "<leader>w", function() vsc.action("workbench.action.files.save") end)
+  map("n", "<leader>W", function() vsc.action("workbench.action.files.saveWithoutFormatting") end)
+  map("n", "<leader>q", function() vsc.action("workbench.action.closeActiveEditor") end)
+
+  -- LSP actions (replaces <leader>l*)
+  map("n", "<leader>la", function() vsc.action("editor.action.quickFix") end)
+  map("n", "<leader>lf", function() vsc.action("editor.action.formatDocument") end)
+  map("n", "<leader>lr", function() vsc.action("editor.action.rename") end)
+  map("n", "<leader>lw", function() vsc.action("workbench.panel.markers.view.focus") end)
+  map("n", "<leader>li", function() vsc.action("editor.action.goToImplementation") end)
+  map("n", "<leader>ls", function() vsc.action("editor.action.triggerParameterHints") end)
+  map("n", "<leader>v", function() vsc.action("editor.action.revealDefinitionAside") end)
+
+  -- LSP navigation (replaces Telescope LSP pickers)
+  map("n", "gd", function() vsc.action("editor.action.revealDefinition") end)
+  map("n", "gr", function() vsc.action("editor.action.goToReferences") end)
+  map("n", "gi", function() vsc.action("editor.action.goToImplementation") end)
+  map("n", "go", function() vsc.action("editor.action.goToTypeDefinition") end)
+  map("n", "gl", function() vsc.action("editor.action.showHover") end)
+  map("n", "gD", function() vsc.action("editor.action.revealDeclaration") end)
+  map("n", "gs", function() vsc.action("editor.action.triggerParameterHints") end)
+
+  -- Git (replaces lazygit/gitsigns UI)
+  map("n", "<leader>lg", function() vsc.action("workbench.view.scm") end)
+  map("n", "<leader>hb", function() vsc.action("git.checkout") end)
+  map("n", "<leader>hl", function() vsc.action("gitlens.toggleLineBlame") end)
+  map("n", "<leader>hd", function() vsc.action("editor.action.dirtydiff.next") end)
+  map("n", "<leader>ho", function() vsc.action("workbench.view.scm") end)
+  map("n", "<leader>m", function() vsc.action("workbench.view.scm") end)
+
+  -- Terminal (replaces toggleterm)
+  map("n", "<C-t>", function() vsc.action("workbench.action.terminal.toggleTerminal") end)
+
+  -- Diagnostics (replaces Trouble)
+  map("n", "<leader>xx", function() vsc.action("workbench.panel.markers.view.focus") end)
+  map("n", "<leader>xX", function() vsc.action("workbench.panel.markers.view.focus") end)
+
+  -- Search/replace (replaces Spectre)
+  map("n", "<leader>rr", function() vsc.action("workbench.action.findInFiles") end)
+  map("n", "<leader>rf", function() vsc.action("editor.action.startFindReplaceAction") end)
+  map("n", "<leader>rw", function() vsc.action("editor.action.startFindReplaceAction") end)
+
+  -- Symbols (replaces Telescope symbol pickers)
+  map("n", "<leader>p", function() vsc.action("workbench.action.gotoSymbol") end)
+  map("n", "<leader>P", function() vsc.action("workbench.action.showAllSymbols") end)
+
+  -- Tests (replaces neotest)
+  map("n", "<leader>tr", function() vsc.action("testing.runAtCursor") end)
+  map("n", "<leader>tt", function() vsc.action("testing.runCurrentFile") end)
+  map("n", "<leader>tT", function() vsc.action("testing.runAll") end)
+  map("n", "<leader>ts", function() vsc.action("workbench.view.testing.focus") end)
+
+  -- Copilot chat
+  map("n", "<leader>c", function() vsc.action("workbench.panel.chat.view.copilot.focus") end)
+end
+
+local function navigate(dir)
+  return function()
+    local key = vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, true, true)
+    vim.api.nvim_feedkeys(key, "n", true)
+    vim.schedule(function()
+      vim.cmd("TmuxNavigate" .. dir)
+    end)
+  end
+end
+
+vim.api.nvim_create_autocmd({ "TermEnter", "BufEnter" }, {
+  pattern = "term://*",
+  callback = function()
+    local name = vim.fn.bufname('%')
+    if name:match("claude") then
+      vim.schedule(function()
+        local opts = { noremap = true, silent = true, buffer = true }
+        vim.keymap.set("t", "<C-h>", navigate("Left"),  opts)
+        vim.keymap.set("t", "<C-j>", navigate("Down"),  opts)
+        vim.keymap.set("t", "<C-k>", navigate("Up"),    opts)
+        vim.keymap.set("t", "<C-l>", navigate("Right"), opts)
+      end)
+    end
+  end,
+})

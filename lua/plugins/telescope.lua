@@ -1,6 +1,7 @@
 return {
   {
     "nvim-telescope/telescope.nvim",
+    cond = not vim.g.vscode,
     cmd = "Telescope",
     version = false,
     lazy = true,
